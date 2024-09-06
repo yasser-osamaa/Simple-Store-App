@@ -34,4 +34,25 @@ class Api {
       throw Exception("${e.toString()} there was an error!!!");
     }
   }
+
+  Future<dynamic> put(
+      {required String url,
+      @required dynamic body,
+      @required String? token}) async {
+    Map<String, String> headers = {};
+    headers.addAll({'Content-Type': 'application/x-www-form-urlencoded'});
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    try {
+      Response response = await dio.put(
+        url,
+        data: body,
+        options: Options(headers: headers),
+      );
+      return response.data;
+    } catch (e) {
+      throw Exception("${e.toString()} there was an error!!!");
+    }
+  }
 }
