@@ -26,7 +26,27 @@ class HomeView extends StatelessWidget {
           ),
         ),
       ),
-      body: const CustomProductCard(),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          right: 12,
+          left: 12,
+          top: 110,
+        ),
+        child: GridView.builder(
+          physics: const BouncingScrollPhysics(),
+          clipBehavior: Clip.none,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 90,
+            childAspectRatio: 1.2,
+          ),
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return const CustomProductCard();
+          },
+        ),
+      ),
     );
   }
 }
