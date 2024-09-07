@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:store_app/models/product_model.dart';
 
 class CustomProductCard extends StatelessWidget {
   const CustomProductCard({
     super.key,
+    required this.product,
   });
-
+  final ProductModel product;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -21,37 +23,39 @@ class CustomProductCard extends StatelessWidget {
               ),
             ],
           ),
-          child: const Card(
+          child: Card(
             elevation: 10,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'product item',
-                    style: TextStyle(
+                    product.title,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        r'$225',
-                        style: TextStyle(
+                        r'$' '${product.price}',
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.favorite,
                         color: Colors.red,
                       ),
@@ -63,11 +67,12 @@ class CustomProductCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: 75,
+          left: 60,
           bottom: 90,
           child: Image.network(
-            'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+            product.image,
             height: 120,
+            width: 110,
           ),
         ),
       ],

@@ -1,10 +1,26 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:store_app/widgets/custom_product_card.dart';
+import 'package:store_app/models/product_model.dart';
+import 'package:store_app/services/get_all_product_service.dart';
+import 'package:store_app/widgets/products_grid_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
   static String id = 'HomeView';
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late Future<List<ProductModel>> futureProduct;
+  @override
+  void initState() {
+    super.initState();
+    futureProduct = AllProductService(dio: Dio()).getAllProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,18 +48,15 @@ class HomeView extends StatelessWidget {
           left: 12,
           top: 110,
         ),
-        child: GridView.builder(
-          physics: const BouncingScrollPhysics(),
-          clipBehavior: Clip.none,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 90,
-            childAspectRatio: 1.2,
-          ),
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return const CustomProductCard();
+        child: FutureBuilder<List<ProductModel>>(
+          future: futureProduct,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<ProductModel> products = snapshot.data!;
+              return ProductsGridView(products: products);
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
           },
         ),
       ),
