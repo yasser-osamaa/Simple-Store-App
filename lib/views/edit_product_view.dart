@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:store_app/models/product_model.dart';
@@ -81,6 +83,15 @@ class _EditProductViewState extends State<EditProductView> {
                     try {
                       await updateProduct();
                       debugPrint('success update');
+                      final udProduct = ProductModel(
+                        id: product.id,
+                        title: name ?? product.title,
+                        price: price ?? product.price.toString(),
+                        description: desc ?? product.description,
+                        image: image ?? product.image,
+                        category: product.category,
+                      );
+                      Navigator.pop(context, udProduct);
                     } catch (e) {
                       debugPrint(e.toString());
                     }

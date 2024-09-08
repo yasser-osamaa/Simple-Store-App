@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:store_app/models/product_model.dart';
-import 'package:store_app/views/edit_product_view.dart';
-
 class CustomProductCard extends StatelessWidget {
   const CustomProductCard({
     super.key,
     required this.product,
+    this.onTap,
   });
   final ProductModel product;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-         Navigator.pushNamed(
-          context,
-          EditProductView.id,
-          arguments: product,
-        );
-        
-      },
+      onTap: onTap, 
       child: Stack(
         clipBehavior: Clip.none,
         children: [
