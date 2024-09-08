@@ -44,6 +44,7 @@ class Api {
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
+    print('url is : $url and body is $body');
     try {
       Response response = await dio.put(
         url,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:store_app/models/product_model.dart';
+import 'package:store_app/services/update_product.dart';
 import 'package:store_app/widgets/custom_button.dart';
 import 'package:store_app/widgets/custom_text_field.dart';
 
@@ -13,80 +15,96 @@ class EditProductView extends StatefulWidget {
 
 class _EditProductViewState extends State<EditProductView> {
   String? name, desc, image;
-  int? price;
-  late TextEditingController textController;
-  late TextEditingController descController;
-  late TextEditingController priceController;
-  late TextEditingController imageController;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    late ProductModel product =
-        ModalRoute.of(context)?.settings.arguments as ProductModel;
-    textController = TextEditingController(text: product.title);
-    descController = TextEditingController(text: product.description);
-    priceController = TextEditingController(text: product.price.toString());
-    imageController = TextEditingController(text: product.image);
-  }
-
+  String? price;
+  late ProductModel product =
+      ModalRoute.of(context)?.settings.arguments as ProductModel;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Update Product'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomTextField(
-              controller: textController,
-              hintText: 'Name Product',
-              onChanged: (value) {
-                name = value;
-              },
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Update Product'),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(12),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 60),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomTextField(
+                  hintText: 'Name Product',
+                  onChanged: (value) {
+                    name = value;
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                  hintText: 'Description',
+                  onChanged: (value) {
+                    desc = value;
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                  hintText: 'Price',
+                  onChanged: (value) {
+                    price = value;
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                  hintText: 'Image',
+                  onChanged: (value) {
+                    image = value;
+                  },
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                CustomButton(
+                  name: 'Update',
+                  onTap: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    try {
+                      await updateProduct();
+                      debugPrint('success update');
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            CustomTextField(
-              controller: descController,
-              hintText: 'Description',
-              onChanged: (value) {
-                desc = value;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            CustomTextField(
-              controller: priceController,
-              hintText: 'Price',
-              onChanged: (value) {
-                price = int.parse(value);
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            CustomTextField(
-              controller: imageController,
-              hintText: 'Image',
-              onChanged: (value) {
-                image = value;
-              },
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            const CustomButton(name: 'Update'),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Future<void> updateProduct() async {
+    await UpdateProduct().updateProduct(
+      id: product.id,
+      title: name ?? product.title,
+      price: price ?? product.price.toString(),
+      des: desc ?? product.description,
+      image: image ?? product.image,
+      category: product.category,
     );
   }
 }

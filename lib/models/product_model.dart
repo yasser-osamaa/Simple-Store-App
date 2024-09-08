@@ -1,9 +1,10 @@
 class ProductModel {
   final num id;
   final String title;
-  final num price;
+  final String price;
   final String description;
   final String image;
+  final String category;
   final RatingModel? rating;
 
   ProductModel(
@@ -12,15 +13,19 @@ class ProductModel {
       required this.price,
       required this.description,
       required this.image,
+      required this.category,
       this.rating}); // made rating not required cause when i add product there no rating in this data
   factory ProductModel.fromJson(jsonData) {
     return ProductModel(
       id: jsonData['id'],
       title: jsonData['title'],
-      price: jsonData['price'],
+      price: jsonData['price'].toString(),
       description: jsonData['description'],
       image: jsonData['image'],
-      rating: RatingModel.fromJson(jsonData['rating']),
+      rating: jsonData['rating'] != null
+          ? RatingModel.fromJson(jsonData['rating'])
+          : null, // Handle null rating
+      category: jsonData['category'],
     );
   }
 }
