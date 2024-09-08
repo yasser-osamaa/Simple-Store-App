@@ -12,7 +12,11 @@ class CustomProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, EditProductView.id);
+        Navigator.pushNamed(
+          context,
+          EditProductView.id,
+          arguments: product,
+        );
       },
       child: Stack(
         clipBehavior: Clip.none,
